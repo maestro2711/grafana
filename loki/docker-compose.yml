@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   ams-loki:
     container_name: ams-loki
@@ -12,8 +14,19 @@ services:
     networks:
       - app-network
 
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    restart: always
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - /var/log:/var/log
+      - /etc/hostname:/etc/hostname
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml
+    networks:
+      - app-network
+
 networks:
   app-network:
-    name: app-network ##
+    name: app-network
     external: true
-      
