@@ -8,7 +8,7 @@ positions:
 clients:
   - url: "http://ams-loki:3100/loki/api/v1/push"
 
-scrape_configs:
+sscrape_configs:
   - job_name: docker-containers
     static_configs:
       - targets:
@@ -18,6 +18,4 @@ scrape_configs:
           __path__: /var/lib/docker/containers/*/*.log
     pipeline_stages:
       - docker: {}
-      - json:
-          expressions:
-            container_name: container_name
+
