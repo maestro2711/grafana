@@ -20,10 +20,9 @@ services:
     restart: always
     command: -config.file=/etc/promtail/promtail-config.yml
     volumes:
-      - /var/log/journal:/var/log/journal:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /etc/machine-id:/etc/machine-id:ro
       - /etc/hostname:/etc/hostname:ro
-      - /var/log/nginx:/var/log/nginx:ro
       - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml
     networks:
       - app-network

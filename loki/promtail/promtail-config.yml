@@ -9,14 +9,15 @@ clients:
   - url: "http://ams-loki:3100/loki/api/v1/push"
 
 scrape_configs:
-  - job_name: docker-journal
-    journal:
-      path: /var/log/journal
-      max_age: 12h
-      labels:
-        job: docker
-    relabel_configs:
-      - source_labels: ["__journal__systemd_unit"]
-        target_label: "unit"
-      - source_labels: ["__journal__hostname"]
-        target_label: "host"
+  - job_name: docker-containers
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          __path__: /var/lib/docker/containers/*/*.log
+    pipeline_stages:
+      - docker: {}
+      - json:
+          expressions:
+            container_name: container_name
