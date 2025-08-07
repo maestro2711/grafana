@@ -9,34 +9,25 @@ clients:
   - url: http://ams-loki:3100/loki/api/v1/push
 
 scrape_configs:
-
-  # 🔹 1. Logs des containers Docker
-  - job_name: docker
-    pipeline_stages:
-      - docker: {}  # parse les logs JSON Docker
+  - job_name: docker-logs
     static_configs:
       - targets:
           - localhost
         labels:
           job: docker
-          __path__: /var/lib/docker/containers/*/*-json.log
+          container_name: FRONT-IMC
+          __path__: /var/lib/docker/containers/c3b468147f9bf902b38333e17f54aca2b025329529ee1337d2db11b0061d96c5/*-json.log
 
-  # 🔹 2. Logs NGINX classiques (accès et erreurs)
-  - job_name: nginx
-    static_configs:
       - targets:
           - localhost
         labels:
-          job: nginx
-          __path__: /var/log/nginx/*.log
+          job: docker
+          container_name: imc-backend
+          __path__: /var/lib/docker/16f17377f9adb3c92b4bab3ef9a0894b5caf24e89d88d9abe32ed1e22073e0d8/*-json.log
 
-  # 🔹 3. Logs Systemd (journald)
-  - job_name: systemd
-    journal:
-      path: /var/log/journal
-      max_age: 12h
-      labels:
-        job: systemd
-    relabel_configs:
-      - source_labels: ['__journal__systemd_unit']
-        target_label: 'unit'
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          container_name: mongo
+          __path__: /var/lib/docker/875e017524034f9b6fdd6cd1339d4b22aa97a850b661b187837c9044e05425a5/*-json.log
