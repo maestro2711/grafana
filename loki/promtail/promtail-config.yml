@@ -9,7 +9,7 @@ clients:
   - url: "http://ams-loki:3100/loki/api/v1/push"
 
 scrape_configs:
-  - job_name: docker-containers
+  - job_name: docker
     static_configs:
       - targets:
           - localhost
@@ -18,4 +18,5 @@ scrape_configs:
           __path__: /var/lib/docker/containers/*/*.log
     pipeline_stages:
       - docker: {}
+    ignore_older: 24h
 
