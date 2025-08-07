@@ -7,23 +7,16 @@ positions:
 
 clients:
   - url: "http://ams-loki:3100/loki/api/v1/push"
+
 scrape_configs:
-  - job_name: systemd-journal
+  - job_name: docker-journal
     journal:
       path: /var/log/journal
       max_age: 12h
       labels:
-        job: systemd
-      matches:
-        - selector: "_SYSTEMD_UNIT=*.service"
+        job: docker
     relabel_configs:
       - source_labels: ["__journal__systemd_unit"]
         target_label: "unit"
-
-  - job_name: nginx
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: nginx
-          __path__: /var/log/nginx/*.log
+      - source_labels: ["__journal__hostname"]
+        target_label: "host"
