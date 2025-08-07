@@ -20,6 +20,7 @@ services:
     restart: always
     command: -config.file=/etc/promtail/promtail-config.yml
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /etc/machine-id:/etc/machine-id:ro
       - /etc/hostname:/etc/hostname:ro
