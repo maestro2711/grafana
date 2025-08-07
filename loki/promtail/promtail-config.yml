@@ -9,7 +9,6 @@ clients:
   - url: http://ams-loki:3100/loki/api/v1/push
 
 scrape_configs:
-  # 🔹 Logs système & Docker via journald
   - job_name: systemd-journal
     journal:
       path: /var/log/journal
@@ -17,7 +16,7 @@ scrape_configs:
       labels:
         job: systemd
       matches:
-        - _SYSTEMD_UNIT=*.service
+        - selector: '_SYSTEMD_UNIT=*.service'
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
