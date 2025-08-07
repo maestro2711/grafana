@@ -5,8 +5,9 @@ services:
     restart: always
     ports:
       - 3100:3100
-    
+    command: -config.file=/etc/loki/config.yml
     volumes:
+      - ./configurations/configs.yml:/etc/loki/config.yml
       - ./ams-loki-data/loki:/loki
     networks:
       - app-network
