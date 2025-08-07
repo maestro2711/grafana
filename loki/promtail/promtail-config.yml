@@ -16,12 +16,11 @@ scrape_configs:
       labels:
         job: systemd
       matches:
-        - selector: '_SYSTEMD_UNIT=*.service'
+        - selector: "_SYSTEMD_UNIT=*.service"
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
 
-  # 🔹 Fichiers de log classiques (ex: nginx)
   - job_name: nginx
     static_configs:
       - targets:
