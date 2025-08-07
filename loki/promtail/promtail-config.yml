@@ -9,20 +9,34 @@ clients:
   - url: http://ams-loki:3100/loki/api/v1/push
 
 scrape_configs:
+
+  # 🔹 1. Logs des containers Docker
   - job_name: docker
+    pipeline_stages:
+      - docker: {}  # parse les logs JSON Docker
     static_configs:
       - targets:
           - localhost
         labels:
           job: docker
-          __path__: /var/lib/docker/containers/*/*.log
-    pipeline_stages:
-      - json:
-          expressions:
-            log: log
-            stream: stream
-            time: time
-      - labels:
-          container_id:
-      - docker:
-          match_container_id: container_id
+          __path__: /var/lib/docker/containers/*/*-json.log
+
+  # 🔹 2. Logs NGINX classiques (accès et erreurs)
+  - job_name: nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx
+          __path__: /var/log/nginx/*.log
+
+  # 🔹 3. Logs Systemd (journald)
+  - job_name: systemd
+    journal:
+      path: /var/log/journal
+      max_age: 12h
+      labels:
+        job: systemd
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
