@@ -15,16 +15,19 @@ services:
       - app-network
 
   promtail:
-    container_name: promtail
     image: grafana/promtail:latest
+    container_name: promtail
     restart: always
     command: -config.file=/etc/promtail/promtail-config.yml
     volumes:
-      - /var/log:/var/log
-      - /etc/hostname:/etc/hostname
+      - /var/log/journal:/var/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /etc/hostname:/etc/hostname:ro
+      - /var/log/nginx:/var/log/nginx:ro
       - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml
     networks:
       - app-network
+
 
 networks:
   app-network:
