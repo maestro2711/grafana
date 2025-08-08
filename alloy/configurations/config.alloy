@@ -28,6 +28,6 @@ loki.process "process_logs" {
 
 loki.write "grafana_loki" {
     endpoint {
-        url = " http://ams-loki:3100/loki/v1/push"
+        url = "http://ams-loki:3100"
     }
 }
