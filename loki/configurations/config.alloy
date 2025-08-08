@@ -1,0 +1,33 @@
+livedebugging {
+    enabled = true
+}
+
+local.file_match "log_files" {
+    path_targets = [
+        {"__path__" = "/tmp/nginx/*.log"},
+    ]
+}
+
+loki.source.file "log_scrape" {
+    targets = local.file_match.log_files.targets  
+    forward_to = [loki.process.process_logs.receiver]
+    tail_from_end = true
+}
+
+loki.process "process_logs" {
+    stage.labels {
+        values = {
+            job = "nginx",
+            host = "${host.name}",
+        }
+    }
+    forward_to = [loki.write.grafana_loki.receiver]
+}
+
+
+
+loki.write "grafana_loki" {
+    endpoint {
+        url = " http://ams-loki:3100/loki/v1/push"
+    }
+}

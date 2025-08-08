@@ -1,0 +1,19 @@
+services:
+  ams-alloy:
+    container_name: ams-alloy
+    image: grafana/alloy:v1.6.1
+    restart: always
+    ports:
+      - 3145:12345
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    volumes:
+      - ./configurations/config.alloy:/etc/alloy/config.alloy
+      - /var/log/nginx:/tmp/nginx
+     
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: app-network
+    external: true

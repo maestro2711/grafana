@@ -31,3 +31,14 @@ scrape_configs:
       # Nom du job
       - target_label: job
         replacement: docker
+
+   # 2. NGINX log scraping   #
+  ###########################
+  # - job_name: nginx
+  #   static_configs:
+  #     - targets:
+  #         - localhost
+  #       labels:
+  #         job: nginx
+  #         __path__: /var/log/nginx/*.log
+  #         instance: nginx-local
