@@ -15,7 +15,7 @@ services:
 
     volumes:
       - ./configurations:/etc/prometheus
-      - /data:/prometheus
+      - ./data:/prometheus
      
     networks:
       - app-network
